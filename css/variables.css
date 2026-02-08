@@ -1,0 +1,226 @@
+/* =====================================================================
+   GigaChat – Theme Variables
+   Color palette derived from the nebula image:
+     Sand(lightest) → Teal → Teal-dark → Blue → Navy → Plum(darkest)
+   ===================================================================== */
+
+:root {
+  /* ── Palette ─────────────────────────────────────────────────────── */
+  --color-sand:        #E8D5A3;
+  --color-sand-light:  #F2E8CC;
+  --color-sand-dim:    #D4C08E;
+  --color-teal:        #4FA89B;
+  --color-teal-light:  #6BBFB3;
+  --color-teal-dark:   #2A8A8A;
+  --color-blue:        #1E6B8A;
+  --color-blue-light:  #27819E;
+  --color-navy:        #2D3561;
+  --color-navy-light:  #3A4478;
+  --color-navy-dark:   #1E2445;
+  --color-plum:        #6B2D5B;
+  --color-plum-light:  #8A3D76;
+  --color-plum-dark:   #4E1F42;
+
+  /* ── Semantic tokens ─────────────────────────────────────────────── */
+
+  /* Backgrounds */
+  --bg-app:            #141825;
+  --bg-sidebar:        rgba(30, 36, 69, 0.65);
+  --bg-sidebar-solid:  #1c2240;
+  --bg-chat:           var(--color-sand-light);
+  --bg-chat-header:    rgba(242, 232, 204, 0.85);
+  --bg-composer:       rgba(255, 255, 255, 0.75);
+  --bg-input:          rgba(255, 255, 255, 0.6);
+  --bg-modal:          rgba(20, 24, 37, 0.92);
+
+  /* Message bubbles */
+  --bg-bubble-other:   rgba(255, 255, 255, 0.82);
+  --bg-bubble-self:    var(--color-navy);
+  --text-bubble-other: #1a1a2e;
+  --text-bubble-self:  #f0ece4;
+
+  /* Text */
+  --text-primary:      #f0ece4;
+  --text-secondary:    rgba(240, 236, 228, 0.6);
+  --text-muted:        rgba(240, 236, 228, 0.38);
+  --text-dark:         #1a1a2e;
+  --text-dark-secondary: rgba(26, 26, 46, 0.6);
+
+  /* Borders */
+  --border-glass:      rgba(255, 255, 255, 0.10);
+  --border-light:      rgba(26, 26, 46, 0.10);
+  --border-input:      rgba(26, 26, 46, 0.18);
+
+  /* Accents */
+  --accent:            var(--color-teal);
+  --accent-hover:      var(--color-teal-light);
+  --accent-gradient:   linear-gradient(135deg, var(--color-teal) 0%, var(--color-plum) 100%);
+  --accent-gradient-h: linear-gradient(90deg, var(--color-teal) 0%, var(--color-blue) 60%, var(--color-plum) 100%);
+  --btn-primary-bg:    linear-gradient(135deg, var(--color-teal-dark) 0%, var(--color-teal) 100%);
+  --btn-primary-hover: linear-gradient(135deg, var(--color-teal) 0%, var(--color-teal-light) 100%);
+  --btn-danger-bg:     linear-gradient(135deg, var(--color-plum-dark) 0%, var(--color-plum) 100%);
+
+  /* Shadows */
+  --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.18);
+  --shadow-md:  0 4px 16px rgba(0, 0, 0, 0.22);
+  --shadow-lg:  0 8px 32px rgba(0, 0, 0, 0.30);
+  --shadow-glow-teal: 0 0 20px rgba(79, 168, 155, 0.25);
+  --shadow-glow-plum: 0 0 20px rgba(107, 45, 91, 0.25);
+
+  /* Glass */
+  --glass-bg:          rgba(255, 255, 255, 0.06);
+  --glass-blur:        16px;
+
+  /* ── Layout ──────────────────────────────────────────────────────── */
+  --sidebar-width:     300px;
+  --header-height:     56px;
+  --composer-height:   110px;
+  --radius-xs:         6px;
+  --radius-sm:         10px;
+  --radius-md:         14px;
+  --radius-lg:         20px;
+  --radius-full:       9999px;
+
+  /* ── Transitions ─────────────────────────────────────────────────── */
+  --transition-fast:   150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow:   400ms ease;
+
+  /* ── Typography ──────────────────────────────────────────────────── */
+  --font-family:       'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono:         'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  --fs-xs:             0.7rem;
+  --fs-sm:             0.8rem;
+  --fs-base:           0.9rem;
+  --fs-md:             1rem;
+  --fs-lg:             1.15rem;
+  --fs-xl:             1.4rem;
+  --fs-2xl:            1.8rem;
+  --fw-normal:         400;
+  --fw-medium:         500;
+  --fw-semibold:       600;
+  --fw-bold:           700;
+
+  /* ── Avatar palette (for generating colored initials) ────────────── */
+  --avatar-1: var(--color-teal-dark);
+  --avatar-2: var(--color-plum);
+  --avatar-3: var(--color-blue);
+  --avatar-4: var(--color-navy);
+  --avatar-5: var(--color-teal);
+  --avatar-6: var(--color-plum-light);
+}
+
+/* ── Global resets ─────────────────────────────────────────────────── */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font-family);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--bg-app);
+  color: var(--text-primary);
+  overflow: hidden;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+input, textarea {
+  font-family: inherit;
+  outline: none;
+  border: none;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Light-area scrollbars (chat panel) */
+.light-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.light-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.22);
+}
+
+/* ── Utility classes ───────────────────────────────────────────────── */
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--border-glass);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.fade-in {
+  animation: fadeIn var(--transition-normal) forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(79, 168, 155, 0.3); }
+  50%      { box-shadow: 0 0 20px rgba(79, 168, 155, 0.6); }
+}

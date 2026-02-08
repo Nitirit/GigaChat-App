@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>GigaChat</title>
+        <link rel="stylesheet" href="css/variables.css" />
+        <link rel="stylesheet" href="css/chat.css" />
+    </head>
+    <body class="chat-page">
+        <!-- ── Toast notification container ──────────────────────────────── -->
+        <div id="toast-container" class="toast-container"></div>
+
+        <!-- ── Mobile sidebar backdrop ───────────────────────────────────── -->
+        <div class="sidebar-backdrop"></div>
+
+        <!-- ══════════════════════════════════════════════════════════════════
+       TOP BAR
+       ══════════════════════════════════════════════════════════════════ -->
+        <header class="top-bar">
+            <div style="display: flex; align-items: center; gap: 0.6rem">
+                <!-- Mobile hamburger (visible < 768px) -->
+                <button
+                    id="btn-mobile-menu"
+                    class="btn-mobile-menu"
+                    aria-label="Open sidebar"
+                >
+                    &#9776;
+                </button>
+                <div class="top-bar-logo">
+                    Giga<span class="logo-accent">Chat</span>
+                </div>
+            </div>
+
+            <div class="top-bar-actions">
+                <button id="btn-settings" class="btn-settings">
+                    <span class="icon">&#9881;</span>
+                    Settings
+                </button>
+            </div>
+        </header>
+
+        <!-- ══════════════════════════════════════════════════════════════════
+       BODY  =  SIDEBAR  +  CHAT MAIN
+       ══════════════════════════════════════════════════════════════════ -->
+        <div class="chat-body">
+            <!-- ────────────────────────────────────────────────────────────────
+         SIDEBAR
+         ──────────────────────────────────────────────────────────────── -->
+            <aside class="sidebar">
+                <!-- Workspace header -->
+                <div class="workspace-header">
+                    <div class="workspace-avatar">
+                        <span id="workspace-avatar-letter">G</span>
+                        <span class="online-dot"></span>
+                    </div>
+                    <div class="workspace-info">
+                        <div class="workspace-name" id="workspace-name">
+                            GigaChat
+                        </div>
+                        <div class="workspace-meta">
+                            <span class="status-dot"></span>
+                            Online
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search + Add Friend -->
+                <div class="sidebar-search-row">
+                    <div class="search-input-wrapper">
+                        <span class="search-icon">&#128269;</span>
+                        <input
+                            type="text"
+                            id="sidebar-search"
+                            placeholder="Search messages..."
+                            spellcheck="false"
+                            autocomplete="off"
+                        />
+                    </div>
+                    <button id="btn-add-friend" class="btn-add-friend">
+                        + Add Friend
+                    </button>
+                </div>
+
+                <!-- Section: Direct Messages -->
+                <div class="sidebar-section-header">
+                    <span>Direct messages</span>
+                    <button id="btn-add-friend-section" title="Add friend">
+                        +
+                    </button>
+                </div>
+
+                <!-- Friend list (populated by JS) -->
+                <div id="friend-list" class="friend-list">
+                    <div class="friend-list-empty">
+                        <div class="empty-icon">&#128101;</div>
+                        <span
+                            >No friends yet.<br />Click <b>+ Add Friend</b> to
+                            get started!</span
+                        >
+                    </div>
+                </div>
+            </aside>
+
+            <!-- ────────────────────────────────────────────────────────────────
+         MAIN CHAT PANEL
+         ──────────────────────────────────────────────────────────────── -->
+            <main class="chat-main">
+                <!-- Empty state (shown when no conversation is selected) -->
+                <div id="chat-empty-state" class="chat-empty-state">
+                    <div class="empty-icon">&#128172;</div>
+                    <h3>Welcome to GigaChat</h3>
+                    <p>
+                        Select a friend from the sidebar to start chatting, or
+                        add a new friend.
+                    </p>
+                </div>
+
+                <!-- Active conversation area (hidden until a conversation is opened) -->
+                <div
+                    id="chat-active-area"
+                    style="
+                        display: none;
+                        flex-direction: column;
+                        flex: 1;
+                        min-height: 0;
+                    "
+                >
+                    <!-- Chat header -->
+                    <div class="chat-header">
+                        <div class="chat-header-left">
+                            <div
+                                class="chat-header-title"
+                                id="chat-header-title"
+                            >
+                                <h2>Conversation</h2>
+                                <div class="chat-header-tags">
+                                    <span class="chat-tag">direct message</span>
+                                </div>
+                            </div>
+                            <div class="chat-header-meta" id="chat-header-meta">
+                                1-on-1 conversation
+                            </div>
+                        </div>
+                        <div class="chat-header-right">
+                            <button
+                                class="btn-chat-action"
+                                title="Pin conversation"
+                            >
+                                <span class="icon">&#9734;</span>
+                                Pin
+                            </button>
+                            <button
+                                class="btn-icon-only"
+                                title="Conversation settings"
+                            >
+                                &#9881;
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Connection status bar -->
+                    <div id="connection-status" class="connection-status"></div>
+
+                    <!-- Messages area -->
+                    <div id="messages-area" class="messages-area light-scroll">
+                        <!-- Messages are rendered by JS -->
+                    </div>
+
+                    <!-- Message composer -->
+                    <div class="composer">
+                        <button
+                            class="composer-attach"
+                            title="Attach file"
+                            type="button"
+                        >
+                            &#128206;
+                        </button>
+
+                        <div class="composer-input-wrapper">
+                            <textarea
+                                id="composer-textarea"
+                                class="composer-textarea"
+                                placeholder="Write a message..."
+                                rows="1"
+                                spellcheck="true"
+                                autocomplete="off"
+                            ></textarea>
+                            <div class="composer-bottom">
+                                <span class="composer-hint"
+                                    >Enter to send &bull; Shift+Enter for
+                                    newline</span
+                                >
+                                <span
+                                    id="composer-char-count"
+                                    class="composer-char-count"
+                                    >0/500</span
+                                >
+                            </div>
+                        </div>
+
+                        <div class="composer-actions">
+                            <button
+                                class="btn-emoji"
+                                title="Emoji"
+                                type="button"
+                            >
+                                &#128578;
+                            </button>
+                            <button
+                                id="btn-send"
+                                class="btn-send"
+                                disabled
+                                title="Send message"
+                            >
+                                <span class="send-icon">&#10148;</span>
+                                Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- /#chat-active-area -->
+            </main>
+        </div>
+        <!-- /.chat-body -->
+
+        <!-- ══════════════════════════════════════════════════════════════════
+       MODALS
+       ══════════════════════════════════════════════════════════════════ -->
+
+        <!-- ── Add Friend Modal ──────────────────────────────────────────── -->
+        <div id="add-friend-modal" class="modal-overlay">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>Add Friend</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <form id="add-friend-form">
+                    <div class="modal-body">
+                        <p
+                            style="
+                                font-size: 0.85rem;
+                                color: rgba(240, 236, 228, 0.6);
+                                margin-bottom: 0.3rem;
+                            "
+                        >
+                            Enter your friend's User ID to send them a friend
+                            request. You can find your own User ID in your
+                            profile settings.
+                        </p>
+
+                        <!-- Feedback message -->
+                        <div
+                            id="add-friend-message"
+                            class="auth-message"
+                            style="display: none"
+                        ></div>
+
+                        <div class="input-group">
+                            <label for="add-friend-id">Friend's User ID</label>
+                            <input
+                                type="text"
+                                id="add-friend-id"
+                                placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                                spellcheck="false"
+                                autocomplete="off"
+                            />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn-modal-secondary modal-close"
+                        >
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn-modal-primary">
+                            Send Request
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ── Settings / Edit Profile Modal ─────────────────────────────── -->
+        <div id="settings-modal" class="modal-overlay">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>Settings</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <form id="settings-form">
+                    <div class="modal-body">
+                        <div class="input-group">
+                            <label for="settings-display-name"
+                                >Display Name</label
+                            >
+                            <input
+                                type="text"
+                                id="settings-display-name"
+                                placeholder="Your display name"
+                                spellcheck="false"
+                                autocomplete="name"
+                            />
+                        </div>
+
+                        <div class="input-group">
+                            <label for="settings-bio">Bio</label>
+                            <textarea
+                                id="settings-bio"
+                                placeholder="Tell the world about yourself..."
+                                rows="3"
+                            ></textarea>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="settings-avatar-url"
+                                >Avatar URL
+                                <span style="opacity: 0.5"
+                                    >(optional)</span
+                                ></label
+                            >
+                            <input
+                                type="url"
+                                id="settings-avatar-url"
+                                placeholder="https://example.com/avatar.png"
+                                spellcheck="false"
+                                autocomplete="url"
+                            />
+                        </div>
+
+                        <div
+                            style="
+                                border-top: 1px solid rgba(255, 255, 255, 0.08);
+                                margin-top: 0.3rem;
+                                padding-top: 0.8rem;
+                                display: flex;
+                                flex-direction: column;
+                                gap: 0.5rem;
+                            "
+                        >
+                            <button
+                                type="button"
+                                id="btn-view-profile"
+                                class="btn-modal-secondary"
+                                style="width: 100%; text-align: center"
+                            >
+                                &#128100; View My Profile
+                            </button>
+                            <button
+                                type="button"
+                                id="btn-logout"
+                                class="btn-modal-danger"
+                                style="width: 100%; text-align: center"
+                            >
+                                &#128682; Logout
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn-modal-secondary modal-close"
+                        >
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn-modal-primary">
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ── Profile View Modal ────────────────────────────────────────── -->
+        <div id="profile-modal" class="modal-overlay">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>My Profile</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <!-- Content is populated by JS -->
+                    <div class="loading-spinner"></div>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn-modal-secondary modal-close"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Scripts ──────────────────────────────────────────────────── -->
+        <script src="js/api.js"></script>
+        <script src="js/chat.js"></script>
+    </body>
+</html>
