@@ -33,7 +33,7 @@
             </div>
 
             <div class="top-bar-actions">
-                <button id="btn-settings" class="btn-settings">
+                <button id="btn-settings" class="btn-settings" type="button">
                     <span class="icon">&#9881;</span>
                     Settings
                 </button>
@@ -52,7 +52,6 @@
                 <div class="workspace-header">
                     <div class="workspace-avatar">
                         <span id="workspace-avatar-letter">G</span>
-                        <span class="online-dot"></span>
                     </div>
                     <div class="workspace-info">
                         <div class="workspace-name" id="workspace-name">
@@ -77,7 +76,11 @@
                             autocomplete="off"
                         />
                     </div>
-                    <button id="btn-add-friend" class="btn-add-friend">
+                    <button
+                        id="btn-add-friend"
+                        class="btn-add-friend"
+                        type="button"
+                    >
                         + Add Friend
                     </button>
                 </div>
@@ -85,7 +88,11 @@
                 <!-- Section: Direct Messages -->
                 <div class="sidebar-section-header">
                     <span>Direct messages</span>
-                    <button id="btn-add-friend-section" title="Add friend">
+                    <button
+                        id="btn-add-friend-section"
+                        title="Add friend"
+                        type="button"
+                    >
                         +
                     </button>
                 </div>
@@ -138,24 +145,11 @@
                                     <span class="chat-tag">direct message</span>
                                 </div>
                             </div>
-                            <div class="chat-header-meta" id="chat-header-meta">
-                                1-on-1 conversation
-                            </div>
+                        
                         </div>
                         <div class="chat-header-right">
-                            <button
-                                class="btn-chat-action"
-                                title="Pin conversation"
-                            >
-                                <span class="icon">&#9734;</span>
-                                Pin
-                            </button>
-                            <button
-                                class="btn-icon-only"
-                                title="Conversation settings"
-                            >
-                                &#9881;
-                            </button>
+                           
+                           
                         </div>
                     </div>
 
@@ -169,13 +163,13 @@
 
                     <!-- Message composer -->
                     <div class="composer">
-                        <button
+                        <!--<button
                             class="composer-attach"
                             title="Attach file"
                             type="button"
                         >
                             &#128206;
-                        </button>
+                        </button>-->
 
                         <div class="composer-input-wrapper">
                             <textarea
@@ -187,10 +181,7 @@
                                 autocomplete="off"
                             ></textarea>
                             <div class="composer-bottom">
-                                <span class="composer-hint"
-                                    >Enter to send &bull; Shift+Enter for
-                                    newline</span
-                                >
+                               
                                 <span
                                     id="composer-char-count"
                                     class="composer-char-count"
@@ -200,16 +191,17 @@
                         </div>
 
                         <div class="composer-actions">
-                            <button
+                            <!--<button
                                 class="btn-emoji"
                                 title="Emoji"
                                 type="button"
                             >
                                 &#128578;
-                            </button>
+                            </button>-->
                             <button
                                 id="btn-send"
                                 class="btn-send"
+                                type="button"
                                 disabled
                                 title="Send message"
                             >
@@ -233,7 +225,7 @@
             <div class="modal">
                 <div class="modal-header">
                     <h3>Add Friend</h3>
-                    <button class="modal-close">&times;</button>
+                    <button class="modal-close" type="button">&times;</button>
                 </div>
                 <form id="add-friend-form">
                     <div class="modal-body">
@@ -287,7 +279,7 @@
             <div class="modal">
                 <div class="modal-header">
                     <h3>Settings</h3>
-                    <button class="modal-close">&times;</button>
+                    <button class="modal-close" type="button">&times;</button>
                 </div>
                 <form id="settings-form">
                     <div class="modal-body">
@@ -377,7 +369,7 @@
             <div class="modal">
                 <div class="modal-header">
                     <h3>My Profile</h3>
-                    <button class="modal-close">&times;</button>
+                    <button class="modal-close" type="button">&times;</button>
                 </div>
                 <div class="modal-body">
                     <!-- Content is populated by JS -->

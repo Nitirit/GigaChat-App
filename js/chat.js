@@ -295,16 +295,19 @@
         // data = { sender_id, content, created_at }
         if (!data || !data.content) return;
 
-        messages.push({
+        const newMsg = {
           id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(),
           conversation_id: conversationId,
           sender_id: data.sender_id,
           content: data.content,
           created_at: data.created_at || new Date().toISOString(),
-        });
+        };
 
-        renderMessages();
-        scrollToBottom();
+        messages.push(newMsg);
+
+        // Append only the new message instead of re-rendering everything
+        appendMessage(newMsg);
+        scrollToBottom(true); // smooth scroll for new messages
       },
 
       onClose() {
@@ -356,45 +359,95 @@
     let html = "";
 
     messages.forEach((msg, index) => {
-      const isSelf = msg.sender_id === currentUser.user_id;
-      const senderName = isSelf ? "You" : getFriendName(msg.sender_id);
-      const initial = senderName.charAt(0).toUpperCase();
-      const color = isSelf
-        ? AVATAR_COLORS[3] // navy for self
-        : getAvatarColor(msg.sender_id);
-      const time = formatTime(msg.created_at);
-      const side = isSelf ? "self" : "other";
-
-      // Show date separator if needed
-      if (
-        index === 0 ||
-        isDifferentDay(messages[index - 1].created_at, msg.created_at)
-      ) {
-        const dateStr = formatDate(msg.created_at);
-        html += `<div class="date-separator"><span>${dateStr}</span></div>`;
-      }
-
-      html += `
-        <div class="message ${side}">
-          <div class="message-avatar" style="background:${color}">${initial}</div>
-          <div class="message-body">
-            <div class="message-header">
-              <span class="message-sender">${escapeHtml(senderName)}</span>
-              <span class="message-time">${time}</span>
-            </div>
-            <div class="message-bubble">${escapeHtml(msg.content)}</div>
-          </div>
-        </div>
-      `;
+      html += buildMessageHtml(msg, index);
     });
 
     messagesArea.innerHTML = html;
   }
 
-  function scrollToBottom() {
+  // Build HTML for a single message (used by both renderMessages and appendMessage)
+  function buildMessageHtml(msg, index) {
+    const isSelf = msg.sender_id === currentUser.user_id;
+    const senderName = isSelf ? "You" : getFriendName(msg.sender_id);
+    const initial = senderName.charAt(0).toUpperCase();
+    const color = isSelf
+      ? AVATAR_COLORS[3] // navy for self
+      : getAvatarColor(msg.sender_id);
+    const time = formatTime(msg.created_at);
+    const side = isSelf ? "self" : "other";
+
+    let html = "";
+
+    // Show date separator if needed
+    const prevMsg = index > 0 ? messages[index - 1] : null;
+    if (
+      index === 0 ||
+      (prevMsg && isDifferentDay(prevMsg.created_at, msg.created_at))
+    ) {
+      const dateStr = formatDate(msg.created_at);
+      html += `<div class="date-separator"><span>${dateStr}</span></div>`;
+    }
+
+    html += `
+      <div class="message ${side}" data-msg-id="${msg.id}">
+        <div class="message-avatar" style="background:${color}">${initial}</div>
+        <div class="message-body">
+          <div class="message-header">
+            <span class="message-sender">${escapeHtml(senderName)}</span>
+            <span class="message-time">${time}</span>
+          </div>
+          <div class="message-bubble">${escapeHtml(msg.content)}</div>
+        </div>
+      </div>
+    `;
+
+    return html;
+  }
+
+  // Append a single message to the chat (no full re-render)
+  function appendMessage(msg) {
+    if (!messagesArea) return;
+
+    // Remove the "Say hi" system message if this is the first real message
+    const systemMsg = messagesArea.querySelector(".message-system");
+    if (systemMsg) {
+      systemMsg.remove();
+    }
+
+    // Check if message already exists (prevent duplicates)
+    if (messagesArea.querySelector(`[data-msg-id="${msg.id}"]`)) {
+      return;
+    }
+
+    const index = messages.length - 1;
+    const html = buildMessageHtml(msg, index);
+
+    // Create a temporary container to parse the HTML
+    const temp = document.createElement("div");
+    temp.innerHTML = html;
+
+    // Append each child element to the messages area
+    while (temp.firstChild) {
+      const child = temp.firstChild;
+      // Add animation class to message elements
+      if (child.classList && child.classList.contains("message")) {
+        child.classList.add("new-message");
+      }
+      messagesArea.appendChild(child);
+    }
+  }
+
+  function scrollToBottom(smooth = false) {
     if (!messagesArea) return;
     requestAnimationFrame(() => {
-      messagesArea.scrollTop = messagesArea.scrollHeight;
+      if (smooth) {
+        messagesArea.scrollTo({
+          top: messagesArea.scrollHeight,
+          behavior: "smooth",
+        });
+      } else {
+        messagesArea.scrollTop = messagesArea.scrollHeight;
+      }
     });
   }
 

@@ -13,12 +13,12 @@
     background-image:
         radial-gradient(
             ellipse at 15% 80%,
-            rgba(42, 138, 138, 0.08) 0%,
+            rgba(45, 90, 138, 0.12) 0%,
             transparent 50%
         ),
         radial-gradient(
             ellipse at 85% 15%,
-            rgba(107, 45, 91, 0.06) 0%,
+            rgba(139, 30, 63, 0.08) 0%,
             transparent 45%
         );
 }
@@ -566,7 +566,21 @@
     display: flex;
     gap: 0.65rem;
     max-width: 85%;
-    animation: fadeIn 0.25s ease forwards;
+}
+
+.message.new-message {
+    animation: slideInMessage 0.3s ease forwards;
+}
+
+@keyframes slideInMessage {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .message.self {
@@ -638,7 +652,7 @@
 }
 
 .message.self .message-time {
-    color: rgba(240, 236, 228, 0.5);
+    color: rgba(240, 244, 248, 0.5);
 }
 
 .message-bubble {
@@ -663,7 +677,7 @@
     background: var(--bg-bubble-self);
     color: var(--text-bubble-self);
     border-top-right-radius: var(--radius-xs);
-    box-shadow: 0 2px 8px rgba(45, 53, 97, 0.25);
+    box-shadow: 0 2px 8px rgba(45, 90, 138, 0.3);
 }
 
 /* System message */
