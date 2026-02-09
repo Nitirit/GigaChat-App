@@ -1,167 +1,206 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GigaChat – Login</title>
-  <link rel="stylesheet" href="css/variables.css" />
-  <link rel="stylesheet" href="css/auth.css" />
-</head>
-<body class="auth-page">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>GigaChat – Login</title>
+        <link rel="stylesheet" href="css/variables.css" />
+        <link rel="stylesheet" href="css/auth.css" />
+    </head>
+    <body class="auth-page">
+        <div class="auth-container">
+            <!-- ── Logo ──────────────────────────────────────────────────── -->
+            <div class="auth-logo">
+                <h1>Giga<span class="logo-accent">Chat</span></h1>
+                <p>Connect with friends in real-time</p>
+            </div>
 
-  <div class="auth-container">
+            <!-- ── Card ──────────────────────────────────────────────────── -->
+            <div class="auth-card">
+                <!-- Tab switcher -->
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">
+                        Login
+                    </button>
+                    <button class="auth-tab" data-tab="register">
+                        Register
+                    </button>
+                </div>
 
-    <!-- ── Logo ──────────────────────────────────────────────────── -->
-    <div class="auth-logo">
-      <h1>Giga<span class="logo-accent">Chat</span></h1>
-      <p>Connect with friends in real-time</p>
-    </div>
+                <!-- ════════════════════════════════════════════════════════ -->
+                <!--  LOGIN FORM                                              -->
+                <!-- ════════════════════════════════════════════════════════ -->
+                <form
+                    id="login-form"
+                    class="auth-form active"
+                    autocomplete="on"
+                    novalidate
+                >
+                    <!-- Feedback message -->
+                    <div id="login-message" class="auth-message"></div>
 
-    <!-- ── Card ──────────────────────────────────────────────────── -->
-    <div class="auth-card">
+                    <!-- Username -->
+                    <div class="input-group">
+                        <label for="login-username">Username</label>
+                        <input
+                            type="text"
+                            id="login-username"
+                            name="username"
+                            placeholder="Enter your username"
+                            autocomplete="username"
+                            spellcheck="false"
+                            required
+                        />
+                    </div>
 
-      <!-- Tab switcher -->
-      <div class="auth-tabs">
-        <button class="auth-tab active" data-tab="login">Login</button>
-        <button class="auth-tab" data-tab="register">Register</button>
-      </div>
+                    <!-- Password -->
+                    <div class="input-group">
+                        <label for="login-password">Password</label>
+                        <div class="password-wrapper">
+                            <input
+                                type="password"
+                                id="login-password"
+                                name="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            />
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                aria-label="Show password"
+                            >
+                                &#x1F441;
+                            </button>
+                        </div>
+                    </div>
 
-      <!-- ════════════════════════════════════════════════════════ -->
-      <!--  LOGIN FORM                                              -->
-      <!-- ════════════════════════════════════════════════════════ -->
-      <form id="login-form" class="auth-form active" autocomplete="on" novalidate>
+                    <!-- Submit -->
+                    <button type="submit" id="login-submit" class="auth-submit">
+                        Login
+                    </button>
+                </form>
 
-        <!-- Feedback message -->
-        <div id="login-message" class="auth-message"></div>
+                <!-- ════════════════════════════════════════════════════════ -->
+                <!--  REGISTER FORM                                           -->
+                <!-- ════════════════════════════════════════════════════════ -->
+                <form
+                    id="register-form"
+                    class="auth-form"
+                    autocomplete="on"
+                    novalidate
+                >
+                    <!-- Feedback message -->
+                    <div id="register-message" class="auth-message"></div>
 
-        <!-- Username -->
-        <div class="input-group">
-          <label for="login-username">Username</label>
-          <input
-            type="text"
-            id="login-username"
-            name="username"
-            placeholder="Enter your username"
-            autocomplete="username"
-            spellcheck="false"
-            required
-          />
+                    <!-- Username -->
+                    <div class="input-group">
+                        <label for="reg-username">Username</label>
+                        <input
+                            type="text"
+                            id="reg-username"
+                            name="username"
+                            placeholder="Choose a username"
+                            autocomplete="username"
+                            spellcheck="false"
+                            required
+                        />
+                    </div>
+
+                    <!-- Display name (optional) -->
+                    <div class="input-group">
+                        <label for="reg-display-name"
+                            >Display Name
+                            <span style="opacity: 0.5">(optional)</span></label
+                        >
+                        <input
+                            type="text"
+                            id="reg-display-name"
+                            name="display_name"
+                            placeholder="How should we call you?"
+                            autocomplete="name"
+                        />
+                    </div>
+
+                    <!-- Password -->
+                    <div class="input-group">
+                        <label for="reg-password">Password</label>
+                        <div class="password-wrapper">
+                            <input
+                                type="password"
+                                id="reg-password"
+                                name="new-password"
+                                placeholder="At least 6 characters"
+                                autocomplete="new-password"
+                                minlength="6"
+                                required
+                            />
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                aria-label="Show password"
+                            >
+                                &#x1F441;
+                            </button>
+                        </div>
+                        <!-- Strength indicator -->
+                        <div class="password-strength">
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                        </div>
+                        <div class="password-strength-label"></div>
+                    </div>
+
+                    <!-- Confirm password -->
+                    <div class="input-group">
+                        <label for="reg-confirm">Confirm Password</label>
+                        <div class="password-wrapper">
+                            <input
+                                type="password"
+                                id="reg-confirm"
+                                name="confirm-password"
+                                placeholder="Re-enter your password"
+                                autocomplete="new-password"
+                                required
+                            />
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                aria-label="Show password"
+                            >
+                                &#x1F441;
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <button type="submit" id="reg-submit" class="auth-submit">
+                        Create Account
+                    </button>
+                </form>
+            </div>
+            <!-- /.auth-card -->
+
+            <!-- Footer -->
+            <div class="auth-footer">
+                <p>
+                    GigaChat &mdash; Real-time messaging powered by Rust &amp;
+                    WebSocket
+                </p>
+            </div>
         </div>
+        <!-- /.auth-container -->
 
-        <!-- Password -->
-        <div class="input-group">
-          <label for="login-password">Password</label>
-          <div class="password-wrapper">
-            <input
-              type="password"
-              id="login-password"
-              name="password"
-              placeholder="Enter your password"
-              autocomplete="current-password"
-              required
-            />
-            <button type="button" class="password-toggle" aria-label="Show password">&#x1F441;</button>
-          </div>
-        </div>
-
-        <!-- Submit -->
-        <button type="submit" id="login-submit" class="auth-submit">
-          Login
-        </button>
-      </form>
-
-      <!-- ════════════════════════════════════════════════════════ -->
-      <!--  REGISTER FORM                                           -->
-      <!-- ════════════════════════════════════════════════════════ -->
-      <form id="register-form" class="auth-form" autocomplete="on" novalidate>
-
-        <!-- Feedback message -->
-        <div id="register-message" class="auth-message"></div>
-
-        <!-- Username -->
-        <div class="input-group">
-          <label for="reg-username">Username</label>
-          <input
-            type="text"
-            id="reg-username"
-            name="username"
-            placeholder="Choose a username"
-            autocomplete="username"
-            spellcheck="false"
-            required
-          />
-        </div>
-
-        <!-- Display name (optional) -->
-        <div class="input-group">
-          <label for="reg-display-name">Display Name <span style="opacity:0.5">(optional)</span></label>
-          <input
-            type="text"
-            id="reg-display-name"
-            name="display_name"
-            placeholder="How should we call you?"
-            autocomplete="name"
-          />
-        </div>
-
-        <!-- Password -->
-        <div class="input-group">
-          <label for="reg-password">Password</label>
-          <div class="password-wrapper">
-            <input
-              type="password"
-              id="reg-password"
-              name="new-password"
-              placeholder="At least 6 characters"
-              autocomplete="new-password"
-              minlength="6"
-              required
-            />
-            <button type="button" class="password-toggle" aria-label="Show password">&#x1F441;</button>
-          </div>
-          <!-- Strength indicator -->
-          <div class="password-strength">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-          </div>
-          <div class="password-strength-label"></div>
-        </div>
-
-        <!-- Confirm password -->
-        <div class="input-group">
-          <label for="reg-confirm">Confirm Password</label>
-          <div class="password-wrapper">
-            <input
-              type="password"
-              id="reg-confirm"
-              name="confirm-password"
-              placeholder="Re-enter your password"
-              autocomplete="new-password"
-              required
-            />
-            <button type="button" class="password-toggle" aria-label="Show password">&#x1F441;</button>
-          </div>
-        </div>
-
-        <!-- Submit -->
-        <button type="submit" id="reg-submit" class="auth-submit">
-          Create Account
-        </button>
-      </form>
-
-    </div><!-- /.auth-card -->
-
-    <!-- Footer -->
-    <div class="auth-footer">
-      <p>GigaChat &mdash; Real-time messaging powered by Rust &amp; WebSocket</p>
-    </div>
-
-  </div><!-- /.auth-container -->
-
-  <!-- ── Scripts ──────────────────────────────────────────────────── -->
-  <script src="js/api.js"></script>
-  <script src="js/auth.js"></script>
-
-</body>
+        <!-- ── Scripts ──────────────────────────────────────────────────── -->
+        <script src="js/api.js"></script>
+        <script>
+            // Load .env config before any other script runs
+            GigaAPI.initAPI().then(() => {
+                const s = document.createElement("script");
+                s.src = "js/auth.js";
+                document.body.appendChild(s);
+            });
+        </script>
+    </body>
 </html>

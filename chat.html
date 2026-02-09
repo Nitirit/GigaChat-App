@@ -145,12 +145,8 @@
                                     <span class="chat-tag">direct message</span>
                                 </div>
                             </div>
-                        
                         </div>
-                        <div class="chat-header-right">
-                           
-                           
-                        </div>
+                        <div class="chat-header-right"></div>
                     </div>
 
                     <!-- Connection status bar -->
@@ -181,7 +177,6 @@
                                 autocomplete="off"
                             ></textarea>
                             <div class="composer-bottom">
-                               
                                 <span
                                     id="composer-char-count"
                                     class="composer-char-count"
@@ -388,6 +383,13 @@
 
         <!-- ── Scripts ──────────────────────────────────────────────────── -->
         <script src="js/api.js"></script>
-        <script src="js/chat.js"></script>
+        <script>
+            // Load .env config before any other script runs
+            GigaAPI.initAPI().then(() => {
+                const s = document.createElement("script");
+                s.src = "js/chat.js";
+                document.body.appendChild(s);
+            });
+        </script>
     </body>
 </html>

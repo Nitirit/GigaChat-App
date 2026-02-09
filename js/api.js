@@ -3,10 +3,64 @@
 // All communication with the Rust backend goes through this module.
 // =====================================================================
 
-// When the frontend is served by the Rust backend (same origin),
-// we use an empty base so all fetches are relative to the current host.
-// If you run a separate dev server, change this to "http://localhost:3000".
-const API_BASE = "";
+// ---------------------------------------------------------------------------
+// .env loader – reads frontend/.env and parses KEY=VALUE pairs
+// ---------------------------------------------------------------------------
+
+let API_BASE = "";
+
+/**
+ * Fetch the .env file from the same directory as index.html,
+ * parse KEY=VALUE lines, and return them as an object.
+ */
+async function loadEnv() {
+  try {
+    const res = await fetch("/.env");
+    if (!res.ok) return {};
+    const text = await res.text();
+    const env = {};
+    for (const line of text.split("\n")) {
+      const trimmed = line.trim();
+      // Skip empty lines and comments
+      if (!trimmed || trimmed.startsWith("#")) continue;
+      const idx = trimmed.indexOf("=");
+      if (idx === -1) continue;
+      const key = trimmed.slice(0, idx).trim();
+      let value = trimmed.slice(idx + 1).trim();
+      // Strip surrounding quotes if present
+      if (
+        (value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"))
+      ) {
+        value = value.slice(1, -1);
+      }
+      env[key] = value;
+    }
+    return env;
+  } catch {
+    console.warn("[env] Could not load .env file – using defaults");
+    return {};
+  }
+}
+
+/**
+ * Initialize the API client by loading config from .env
+ * Must be awaited before any API call is made.
+ */
+async function initAPI() {
+  const env = await loadEnv();
+  // Read BACKEND_URL from .env (no trailing slash)
+  if (env.BACKEND_URL) {
+    API_BASE = env.BACKEND_URL.replace(/\/+$/, "");
+  }
+  // Update the exported reference
+  window.GigaAPI.API_BASE = API_BASE;
+  console.log("[api] API_BASE =", API_BASE || "(same origin)");
+}
+
+// ---------------------------------------------------------------------------
+// Core request helper
+// ---------------------------------------------------------------------------
 
 /**
  * Wrapper around fetch that:
@@ -19,10 +73,13 @@ const API_BASE = "";
 async function request(method, path, body = null) {
   const url = `${API_BASE}${path}`;
 
+  // When API_BASE is set (cross-origin), we need "include" so the
+  // browser sends cookies to the other domain. When empty (same
+  // origin), "include" also works fine.
   const opts = {
     method,
     headers: {},
-    credentials: "same-origin", // send session cookie (same origin)
+    credentials: "include",
   };
 
   if (body !== null && (method === "POST" || method === "PUT")) {
@@ -198,6 +255,9 @@ const Conversations = {
 /**
  * Open a WebSocket connection to a conversation.
  *
+ * When API_BASE is set (cross-origin deploy), the WebSocket connects
+ * to the backend host from .env. Otherwise it uses the current page host.
+ *
  * Usage:
  *   const ws = ChatSocket.connect(conversationId, {
  *     onMessage(data)    { ... },  // { sender_id, content, created_at }
@@ -213,9 +273,19 @@ const Conversations = {
  */
 const ChatSocket = {
   connect(conversationId, callbacks = {}) {
-    const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    // Use the current page's host so WebSocket connects to the same server.
-    const wsHost = window.location.host;
+    let wsProtocol;
+    let wsHost;
+
+    if (API_BASE) {
+      // Cross-origin: derive ws host from the backend URL in .env
+      const backendUrl = new URL(API_BASE);
+      wsProtocol = backendUrl.protocol === "https:" ? "wss:" : "ws:";
+      wsHost = backendUrl.host;
+    } else {
+      // Same-origin: connect to the current page's host
+      wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+      wsHost = window.location.host;
+    }
 
     const wsUrl = `${wsProtocol}//${wsHost}/ws/${conversationId}`;
     const socket = new WebSocket(wsUrl);
@@ -280,5 +350,6 @@ window.GigaAPI = {
   Friends,
   Conversations,
   ChatSocket,
+  initAPI,
   API_BASE,
 };
