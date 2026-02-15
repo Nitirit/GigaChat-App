@@ -4,16 +4,35 @@
 // =====================================================================
 
 // ---------------------------------------------------------------------------
-// .env loader – reads frontend/.env and parses KEY=VALUE pairs
+// Config loaders – resolve BACKEND_URL from the best available source:
+//   1. /api/config  (Vercel serverless function – reads env vars at runtime)
+//   2. /.env        (local dev – static file served by the Rust backend)
 // ---------------------------------------------------------------------------
 
 let API_BASE = "";
 
 /**
- * Fetch the .env file from the same directory as index.html,
+ * Try to load config from the Vercel serverless endpoint /api/config.
+ * Returns an object like { BACKEND_URL: "https://..." } on success,
+ * or null if the endpoint is not available (e.g. local dev).
+ */
+async function loadConfigFromAPI() {
+  try {
+    const res = await fetch("/api/config");
+    if (!res.ok) return null;
+    const contentType = res.headers.get("content-type") || "";
+    if (!contentType.includes("application/json")) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Fallback: fetch the .env file from the same origin,
  * parse KEY=VALUE lines, and return them as an object.
  */
-async function loadEnv() {
+async function loadEnvFile() {
   try {
     const res = await fetch("/.env");
     if (!res.ok) return {};
@@ -44,15 +63,29 @@ async function loadEnv() {
 }
 
 /**
- * Initialize the API client by loading config from .env
+ * Initialize the API client by resolving the backend URL.
+ *
+ * Resolution order:
+ *   1. /api/config   – Vercel serverless function (production)
+ *   2. /.env file    – local static file (development)
+ *
  * Must be awaited before any API call is made.
  */
 async function initAPI() {
-  const env = await loadEnv();
-  // Read BACKEND_URL from .env (no trailing slash)
-  if (env.BACKEND_URL) {
-    API_BASE = env.BACKEND_URL.replace(/\/+$/, "");
+  // 1. Try the Vercel serverless endpoint first
+  let config = await loadConfigFromAPI();
+
+  // 2. Fall back to the .env file (local dev)
+  if (!config || !config.BACKEND_URL) {
+    console.log("[api] /api/config not available, falling back to .env");
+    config = await loadEnvFile();
   }
+
+  // Apply the backend URL (no trailing slash)
+  if (config && config.BACKEND_URL) {
+    API_BASE = config.BACKEND_URL.replace(/\/+$/, "");
+  }
+
   // Update the exported reference
   window.GigaAPI.API_BASE = API_BASE;
   console.log("[api] API_BASE =", API_BASE || "(same origin)");
